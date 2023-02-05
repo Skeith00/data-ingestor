@@ -20,7 +20,7 @@
   "homepage": "https://github.com/Skeith00/data-ingestor#readme",
   "dependencies": {
     "axios": "^1.2.6",
-    "xlsx": "^0.18.5"
+    "exceljs": "^4.3.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",

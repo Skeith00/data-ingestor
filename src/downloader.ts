@@ -4,22 +4,21 @@ import { getHandler } from './ingestor/factoryReader';
 import { HandlerOptions } from './ingestor/options/handlerOptions';
 import { Handler } from './ingestor/handler/handler';
 
-export async function bufferFile(url: string, options: HandlerOptions) {
+export async function bufferFile(url: string, options: HandlerOptions) : Promise<any[]> {
     let reader: Handler = getHandler(options.type)
     const { data }  = await axios.get(url, {responseType: 'arraybuffer'});
-    reader.convertFile(data, options);
+    return await reader.convertFile(data, options);
 };
 
-export async function downloadFile(url: string, options: HandlerOptions) {
+export async function downloadFile(url: string, options: HandlerOptions) : Promise<any[]> {
     let reader: Handler = getHandler(options.type)
     const { data } = await axios.get(url, {responseType: 'stream'});
     var wstream : fs.WriteStream = fs.createWriteStream(options.getFileName());
     var path : Buffer | string = wstream.path;
 
-    var stream = data.pipe(wstream);
-
-    stream.on('finish', () => {
+    var stream = await data.pipe(wstream);
+    stream.on('finish', async () => {
         wstream.close();
-        reader.convertFile(path, options);
     });
+    return await reader.convertFile(path, options);
 };

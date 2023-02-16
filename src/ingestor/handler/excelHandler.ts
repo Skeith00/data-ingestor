@@ -1,13 +1,13 @@
 import { ExcelOptions } from '../options/excelOptions';
 import { Handler } from './handler';
-import { Workbook, Worksheet, Row, CellValue } from 'exceljs';
+import Exceljs from 'exceljs';
 
 export class ExcelHandler implements Handler {
     constructor() {}
 
     async convertFile(data : Buffer | string, options : ExcelOptions): Promise<any[]> {
         // read from a file
-        var workbook : Workbook = new Workbook();
+        var workbook : Exceljs.Workbook = new Exceljs.Workbook();
 
         if (data instanceof Buffer) {
             await workbook.xlsx.load(data);
@@ -15,7 +15,7 @@ export class ExcelHandler implements Handler {
             await workbook.xlsx.readFile(data);
         }
 
-        const sheet : Worksheet = workbook.getWorksheet(options.sheetName)
+        const sheet : Exceljs.Worksheet = workbook.getWorksheet(options.sheetName)
 
         if (sheet == null) {
             console.error(`Sheet ${options.sheetName} not found`);
@@ -26,7 +26,7 @@ export class ExcelHandler implements Handler {
         //let object : Object = Object.setPrototypeOf(array, options.object)
     }
 
-    excelToJson(worksheet : Worksheet,  options : ExcelOptions) : any[] {
+    excelToJson(worksheet : Exceljs.Worksheet,  options : ExcelOptions) : any[] {
         var objresult : any[] = [];
         var objheaders : any[] = [];
         let firstRowPosition : number = 1 + options.ignoreFirstRows;
